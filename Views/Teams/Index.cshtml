@@ -1,0 +1,35 @@
+@model IEnumerable<SportsLeague.Models.Team>
+
+@{
+    ViewData["Title"] = "Teams";
+}
+
+<h1>Teams</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Team</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>City</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var team in Model)
+{
+        <tr>
+            <td>@team.Name</td>
+            <td>@team.City</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@team.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@team.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@team.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
