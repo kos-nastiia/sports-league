@@ -16,8 +16,28 @@
         <dt class="col-sm-2">Position</dt>
         <dd class="col-sm-10">@Model.Position</dd>
 
-        <dt class="col-sm-2">Team</dt>
-        <dd class="col-sm-10">@Model.Team?.Name</dd>
+        <dt class="col-sm-2">Number</dt>
+        <dd class="col-sm-10">@Model.Number</dd>
+
+        <dt class="col-sm-2">Teams</dt>
+        <dd class="col-sm-10">
+            @if (Model.TeamPlayers != null && Model.TeamPlayers.Any())
+            {
+                foreach (var tp in Model.TeamPlayers)
+                {
+                    <div>
+                        @tp.Team.Name 
+                        (@tp.StartDate.ToShortDateString()
+                        -
+                        @(tp.EndDate?.ToShortDateString() ?? "Present"))
+                    </div>
+                }
+            }
+            else
+            {
+                <span>No teams</span>
+            }
+        </dd>
     </dl>
 </div>
 

@@ -17,9 +17,6 @@ namespace SportsLeague.Models
 
         public int Number { get; set; }
 
-        public int TeamId { get; set; } // зовнішній ключ
-        public Team Team { get; set; } // навігаційне поле
-
         public ICollection<TeamPlayer> TeamPlayers { get; set; }
     }
 }

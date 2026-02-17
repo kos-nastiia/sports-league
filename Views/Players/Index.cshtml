@@ -15,23 +15,32 @@
         <tr>
             <th>Name</th>
             <th>Position</th>
-            <th>Team</th>
+            <th>Teams</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var player in Model)
 {
-        <tr>
-            <td>@player.FirstName @player.LastName</td>
-            <td>@player.Position</td>
-            <td>@player.Team?.Name</td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@player.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@player.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@player.Id">Delete</a>
-            </td>
-        </tr>
+    <tr>
+        <td>@player.FirstName @player.LastName</td>
+        <td>@player.Position</td>
+        <td>
+            @if (player.TeamPlayers != null && player.TeamPlayers.Any())
+            {
+                @string.Join(", ", player.TeamPlayers.Select(tp => tp.Team.Name))
+            }
+            else
+            {
+                <em>No team</em>
+            }
+        </td>
+        <td>
+            <a asp-action="Edit" asp-route-id="@player.Id">Edit</a> |
+            <a asp-action="Details" asp-route-id="@player.Id">Details</a> |
+            <a asp-action="Delete" asp-route-id="@player.Id">Delete</a>
+        </td>
+    </tr>
 }
     </tbody>
 </table>
