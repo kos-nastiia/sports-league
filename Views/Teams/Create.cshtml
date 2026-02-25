@@ -9,17 +9,81 @@
 <form asp-action="Create">
     <div class="form-group">
         <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control"/>
+        <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
     <div class="form-group ">
         <label asp-for="City"></label>
-        <input asp-for="City" class="form-control"/>
+        <input asp-for="City" class="form-control" />
         <span asp-validation-for="City" class="text-danger"></span>
     </div>
+    <div class="form-group mt-2">
+        <label asp-for="FoundedDate"></label>
+        <input asp-for="FoundedDate" type="date" class="form-control" />
+        <span asp-validation-for="FoundedDate" class="text-danger"></span>
+    </div>
+    <div class="form-group mt-2">
+        <label asp-for="CoachName"></label>
+        <input asp-for="CoachName" class="form-control" />
+        <span asp-validation-for="CoachName" class="text-danger"></span>
+    </div>
+    <div class="form-group mt-2">
+        <label asp-for="Stadium"></label>
+        <input asp-for="Stadium" class="form-control" />
+        <span asp-validation-for="Stadium" class="text-danger"></span>
+    </div>
     <div class="mt-3">
-        <button type="submit" class="btn btn-primary ">Create</button>
+        <button type="submit" class="btn btn-primary">Create</button>
+        <button type="button" id="saveDraftBtn" class="btn btn-outline-secondary ms-2">Save Draft</button>
         <a asp-action="Index" class="btn btn-secondary">Cancel</a>
     </div>
-    
+
 </form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        const TEAM_DRAFT_KEY = 'teamDraft';
+
+        function getTeamForm() {
+            return {
+                Name: document.querySelector('[name="Name"]').value,
+                City: document.querySelector('[name="City"]').value,
+                FoundedDate: document.querySelector('[name="FoundedDate"]').value,
+                CoachName: document.querySelector('[name="CoachName"]').value,
+                Stadium: document.querySelector('[name="Stadium"]').value
+            };
+        }
+
+        function populateTeamForm(d) {
+            if (!d) return;
+            if (d.Name) document.querySelector('[name="Name"]').value = d.Name;
+            if (d.City) document.querySelector('[name="City"]').value = d.City;
+            if (d.FoundedDate) document.querySelector('[name="FoundedDate"]').value = d.FoundedDate;
+            if (d.CoachName) document.querySelector('[name="CoachName"]').value = d.CoachName;
+            if (d.Stadium) document.querySelector('[name="Stadium"]').value = d.Stadium;
+        }
+
+        document.getElementById('saveDraftBtn').addEventListener('click', function () {
+            const data = getTeamForm();
+            // store drafts as array so multiple drafts can be created in a session
+            const key = 'teamDrafts';
+            const existing = sessionStorage.getItem(key);
+            let arr = [];
+            try { arr = existing ? JSON.parse(existing) : []; } catch { arr = []; }
+            arr.push(data);
+            sessionStorage.setItem(key, JSON.stringify(arr));
+            // redirect to index so user sees the draft in the table; draft will be cleared on next reload
+            window.location.href = '/Teams';
+        });
+
+        // populate on load if draft exists (for Create view staying open)
+        document.addEventListener('DOMContentLoaded', function () {
+            const raw = sessionStorage.getItem(TEAM_DRAFT_KEY);
+            if (raw) {
+                try { populateTeamForm(JSON.parse(raw)); } catch { }
+            }
+        });
+    </script>
+}

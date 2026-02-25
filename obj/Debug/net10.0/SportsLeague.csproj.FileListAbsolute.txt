@@ -328,3 +328,4 @@
 /Users/anastasiiakostyrka/Desktop/Навчання/Магістратура/2_семестр/web/SportsLeague/bin/Debug/net10.0/tr/Microsoft.CodeAnalysis.Scripting.resources.dll
 /Users/anastasiiakostyrka/Desktop/Навчання/Магістратура/2_семестр/web/SportsLeague/bin/Debug/net10.0/zh-Hans/Microsoft.CodeAnalysis.Scripting.resources.dll
 /Users/anastasiiakostyrka/Desktop/Навчання/Магістратура/2_семестр/web/SportsLeague/bin/Debug/net10.0/zh-Hant/Microsoft.CodeAnalysis.Scripting.resources.dll
+/Users/anastasiiakostyrka/Desktop/Навчання/Магістратура/2_семестр/web/SportsLeague/obj/Debug/net10.0/SportsLeague.sourcelink.json

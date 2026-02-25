@@ -43,20 +43,40 @@ namespace SportsLeague.Controllers
         // GET: Players/Create
         public IActionResult Create()
         {
+            ViewBag.Teams = _context.Teams.ToList();
             return View();
         }
 
         // POST: Players/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,BirthDate,Position,Number")] Player player)
+        public async Task<IActionResult> Create(
+    [Bind("Id,FirstName,LastName,BirthDate,Position,Number")] Player player,
+    int? teamId)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(player);
                 await _context.SaveChangesAsync();
+
+                if (teamId.HasValue)
+                {
+                    var teamPlayer = new TeamPlayer
+                    {
+                        PlayerId = player.Id,
+                        TeamId = teamId.Value,
+                        StartDate = DateTime.Now,
+                        ContractType = "Standard"
+                    };
+
+                    _context.TeamPlayers.Add(teamPlayer);
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.Teams = _context.Teams.ToList();
             return View(player);
         }
 
@@ -68,13 +88,18 @@ namespace SportsLeague.Controllers
             var player = await _context.Players.FindAsync(id);
             if (player == null) return NotFound();
 
+            ViewBag.Teams = _context.Teams.ToList();
+            var current = _context.TeamPlayers.FirstOrDefault(tp => tp.PlayerId == id && tp.EndDate == null);
+            ViewBag.CurrentTeamId = current?.TeamId;
+
             return View(player);
         }
+
 
         // POST: Players/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,BirthDate,Position,Number")] Player player)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,BirthDate,Position,Number")] Player player, int? teamId)
         {
             if (id != player.Id) return NotFound();
 
@@ -92,38 +117,56 @@ namespace SportsLeague.Controllers
                     else
                         throw;
                 }
+
+                // Handle team assignment/change
+                var existing = _context.TeamPlayers.FirstOrDefault(tp => tp.PlayerId == player.Id && tp.EndDate == null);
+
+                if (teamId.HasValue)
+                {
+                    if (existing == null)
+                    {
+                        var tp = new TeamPlayer
+                        {
+                            PlayerId = player.Id,
+                            TeamId = teamId.Value,
+                            StartDate = DateTime.Now,
+                            ContractType = "Standard"
+                        };
+                        _context.TeamPlayers.Add(tp);
+                        await _context.SaveChangesAsync();
+                    }
+                    else if (existing.TeamId != teamId.Value)
+                    {
+                        existing.EndDate = DateTime.Now;
+                        _context.TeamPlayers.Update(existing);
+
+                        var tp = new TeamPlayer
+                        {
+                            PlayerId = player.Id,
+                            TeamId = teamId.Value,
+                            StartDate = DateTime.Now,
+                            ContractType = "Standard"
+                        };
+                        _context.TeamPlayers.Add(tp);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                else
+                {
+                    // remove current team (set end date)
+                    if (existing != null)
+                    {
+                        existing.EndDate = DateTime.Now;
+                        _context.TeamPlayers.Update(existing);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
                 return RedirectToAction(nameof(Index));
             }
 
+            ViewBag.Teams = _context.Teams.ToList();
             return View(player);
-        }
-
-        // GET: Players/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var player = await _context.Players
-                .FirstOrDefaultAsync(p => p.Id == id);
-
-            if (player == null) return NotFound();
-
-            return View(player);
-        }
-
-        // POST: Players/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var player = await _context.Players.FindAsync(id);
-            if (player != null)
-            {
-                _context.Players.Remove(player);
-                await _context.SaveChangesAsync();
-            }
-
-            return RedirectToAction(nameof(Index));
         }
     }
 }

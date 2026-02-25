@@ -13,34 +13,87 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Name</th>
+            <th>Id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Birth Date</th>
             <th>Position</th>
-            <th>Teams</th>
+            <th>Number</th>
+            <th>Current Team</th>
+            <th>Current Contract</th>
+            <th>All Team Assignments</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var player in Model)
-{
-    <tr>
-        <td>@player.FirstName @player.LastName</td>
-        <td>@player.Position</td>
-        <td>
-            @if (player.TeamPlayers != null && player.TeamPlayers.Any())
-            {
-                @string.Join(", ", player.TeamPlayers.Select(tp => tp.Team.Name))
-            }
+        @foreach (var player in Model)
+        {
+            var current = player.TeamPlayers?.FirstOrDefault(tp => tp.EndDate == null);
+            <tr>
+                <td>@player.Id</td>
+                <td>@player.FirstName</td>
+                <td>@player.LastName</td>
+                <td>@player.BirthDate.ToString("yyyy-MM-dd")</td>
+                <td>@player.Position</td>
+                <td>@player.Number</td>
+                <td>@(current?.Team?.Name ?? "<em>No team</em>")</td>
+                <td>
+                    @if (current != null)
+                    {
+                        @current.ContractType @(" (from " + current.StartDate.ToString("yyyy-MM-dd") + ")")
+                    }
+                    else
+                    {
+                        <em>-</em>
+                    }
+                </td>
+                <td>
+                    @if (player.TeamPlayers != null && player.TeamPlayers.Any())
+                    {
+                        <ul class="list-unstyled mb-0">
+                            @foreach (var tp in player.TeamPlayers)
+                            {
+                                <li>@(tp.Team?.Name ?? "(team removed)") - @tp.ContractType @(" [" +
+                                                            tp.StartDate.ToString("yyyy-MM-dd") + " - " + (tp.EndDate?.ToString("yyyy-MM-dd") ?? "Now") +
+                                                            "]")</li>
+                                }
+                            </ul>
+                        }
             else
-            {
-                <em>No team</em>
+                        {
+                            <em>No assignments</em>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@player.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@player.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@player.Id">Delete</a>
+                    </td>
+                </tr>
             }
-        </td>
-        <td>
-            <a asp-action="Edit" asp-route-id="@player.Id">Edit</a> |
-            <a asp-action="Details" asp-route-id="@player.Id">Details</a> |
-            <a asp-action="Delete" asp-route-id="@player.Id">Delete</a>
-        </td>
-    </tr>
-}
-    </tbody>
-</table>
+        </tbody>
+    </table>
+
+    <script>
+        (function () {
+            const key = 'playerDrafts';
+            const raw = sessionStorage.getItem(key);
+            if (!raw) return;
+            let arr = [];
+            try { arr = JSON.parse(raw); } catch { arr = []; }
+            if (!arr.length) { sessionStorage.removeItem(key); return; }
+
+            const tbody = document.querySelector('table.table tbody');
+            arr.forEach(function (d) {
+                const tr = document.createElement('tr');
+                const name = (d.FirstName || '') + ' ' + (d.LastName || '');
+                const position = d.Position || '';
+                const number = d.Number || '';
+                const birth = d.BirthDate || '';
+                tr.innerHTML = `\n                <td>—</td>\n                <td>${d.FirstName || ''}</td>\n                <td>${d.LastName || ''}</td>\n                <td>${birth}</td>\n                <td>${position}</td>\n                <td>${number}</td>\n                <td><em>Draft</em></td>\n                <td><em>—</em></td>`;
+                tbody.insertAdjacentElement('afterbegin', tr);
+            });
+
+            sessionStorage.removeItem(key);
+        })();
+    </script>

@@ -27,12 +27,27 @@
         <span asp-validation-for="Position" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
-        <label>Teams</label>
-        <select asp-for="TeamPlayers" class="form-control" asp-items="ViewBag.Teams" multiple="multiple"></select>
-        <span class="text-danger"></span>
+    <div class="form-group mt-2">
+        <label>Team</label>
+        <select name="teamId" class="form-control">
+            <option value="">-- No Team --</option>
+            @foreach (var t in ViewBag.Teams)
+            {
+                if (ViewBag.CurrentTeamId != null && ViewBag.CurrentTeamId == t.Id)
+                {
+                    <option value="@t.Id" selected="selected">@t.Name (@t.City)</option>
+                }
+                else
+                {
+                    <option value="@t.Id">@t.Name (@t.City)</option>
+                }
+            }
+        </select>
     </div>
-
     <button type="submit" class="btn btn-primary">Save</button>
     <a asp-action="Index" class="btn btn-secondary">Cancel</a>
 </form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

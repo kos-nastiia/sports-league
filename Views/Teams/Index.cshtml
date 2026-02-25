@@ -13,8 +13,13 @@
 <table class="table table-striped">
     <thead>
         <tr>
+            <th>Id</th>
             <th>Name</th>
             <th>City</th>
+            <th>Founded Date</th>
+            <th>Coach</th>
+            <th>Stadium</th>
+            <th>Players</th>
             <th></th>
         </tr>
     </thead>
@@ -22,8 +27,32 @@
 @foreach (var team in Model)
 {
         <tr>
+            <td>@team.Id</td>
             <td>@team.Name</td>
             <td>@team.City</td>
+            <td>@(team.FoundedDate.HasValue ? team.FoundedDate.Value.ToString("yyyy-MM-dd") : "")</td>
+            <td>@team.CoachName</td>
+            <td>@team.Stadium</td>
+            <td>
+                @if (team.TeamPlayers != null && team.TeamPlayers.Any())
+                {
+                    <ul class="list-unstyled mb-0">
+                    @foreach (var tp in team.TeamPlayers)
+                    {
+                        if (tp.Player != null)
+                        {
+                            <li>
+                                <a asp-controller="Players" asp-action="Details" asp-route-id="@tp.Player.Id">@tp.Player.FirstName @tp.Player.LastName</a>
+                            </li>
+                        }
+                    }
+                    </ul>
+                }
+                else
+                {
+                    <em>No players</em>
+                }
+            </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@team.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@team.Id">Details</a> |
@@ -33,3 +62,25 @@
 }
     </tbody>
 </table>
+
+<script>
+    // Render one-time drafts stored in sessionStorage (then clear them)
+    (function () {
+        const key = 'teamDrafts';
+        const raw = sessionStorage.getItem(key);
+        if (!raw) return;
+        let arr = [];
+        try { arr = JSON.parse(raw); } catch { arr = []; }
+        if (!arr.length) { sessionStorage.removeItem(key); return; }
+
+        const tbody = document.querySelector('table.table tbody');
+        arr.forEach(function (d) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `\n                <td>—</td>\n                <td>${d.Name || ''}</td>\n                <td>${d.City || ''}</td>\n                <td>${d.FoundedDate || ''}</td>\n                <td>${d.CoachName || ''}</td>\n                <td>${d.Stadium || ''}</td>\n                <td><em>Draft</em></td>\n                <td><em>—</em></td>`;
+            tbody.insertAdjacentElement('afterbegin', tr);
+        });
+
+        // remove drafts so they disappear on next reload
+        sessionStorage.removeItem(key);
+    })();
+</script>

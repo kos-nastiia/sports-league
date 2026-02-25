@@ -6,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite("Data Source=sportsleague.db"));
 
+// Note: session services removed (no longer used)
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -21,6 +23,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+// session middleware removed
 
 app.UseAuthorization();
 

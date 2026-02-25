@@ -17,7 +17,10 @@ namespace SportsLeague.Controllers
         // GET: Teams
         public async Task<IActionResult> Index()
         {
-            var teams = await _context.Teams.ToListAsync();
+            var teams = await _context.Teams
+                .Include(t => t.TeamPlayers)
+                    .ThenInclude(tp => tp.Player)
+                .ToListAsync();
             return View(teams);
         }
 
@@ -26,7 +29,10 @@ namespace SportsLeague.Controllers
         {
             if (id == null) return NotFound();
 
-            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == id);
+            var team = await _context.Teams
+                .Include(t => t.TeamPlayers)
+                    .ThenInclude(tp => tp.Player)
+                .FirstOrDefaultAsync(t => t.Id == id);
             if (team == null) return NotFound();
 
             return View(team);
@@ -41,7 +47,7 @@ namespace SportsLeague.Controllers
         // POST: Teams/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,City")] Team team)
+        public async Task<IActionResult> Create([Bind("Id,Name,City,FoundedDate,CoachName,Stadium")] Team team)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +72,7 @@ namespace SportsLeague.Controllers
         // POST: Teams/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,City")] Team team)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,City,FoundedDate,CoachName,Stadium")] Team team)
         {
             if (id != team.Id) return NotFound();
 

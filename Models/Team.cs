@@ -1,4 +1,7 @@
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace SportsLeague.Models
 {
@@ -7,16 +10,23 @@ namespace SportsLeague.Models
         public int Id { get; set; }
 
         [Required]
+        [StringLength(100)]
         public string Name { get; set; }
 
+        [Required]
+        [StringLength(100)]
         public string City { get; set; }
 
-        public DateTime FoundedDate { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayName("Founded Date")]
+        public DateTime? FoundedDate { get; set; }
 
+        [StringLength(100)]
         public string CoachName { get; set; }
 
+        [StringLength(100)]
         public string Stadium { get; set; }
 
-        public ICollection<TeamPlayer> TeamPlayers { get; set; }
+        public ICollection<TeamPlayer> TeamPlayers { get; set; } = new List<TeamPlayer>();
     }
 }
