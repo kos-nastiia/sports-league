@@ -20,6 +20,8 @@ namespace SportsLeague.Models
 
         public string? FilePath { get; set; }
 
+        public string? ReceiverName { get; set; }
+
         public DateTime Timestamp { get; set; }
     }
 }

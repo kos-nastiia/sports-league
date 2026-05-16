@@ -77,6 +77,8 @@ Migrations/
  20260516132411_AddIdentityTables.Designer.cs
  20260516150151_AddChatTable.cs
  20260516150151_AddChatTable.Designer.cs
+ 20260516193505_AddReceiverToChat.cs
+ 20260516193505_AddReceiverToChat.Designer.cs
  ApplicationDbContextModelSnapshot.cs
 Models/
  ChatMessage.cs

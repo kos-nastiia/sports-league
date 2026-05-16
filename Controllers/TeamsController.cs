@@ -144,11 +144,15 @@ namespace SportsLeague.Controllers
             if (file == null || file.Length == 0)
                 return BadRequest(new { error = "No file uploaded." });
 
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".pdf", ".doc", ".docx", ".txt" };
+            var fileExt = Path.GetExtension(file.FileName);
+            if (string.IsNullOrWhiteSpace(fileExt) || !allowedExtensions.Contains(fileExt, StringComparer.OrdinalIgnoreCase))
+                return BadRequest(new { error = "Unsupported file type." });
+
             var uploadsRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
             if (!Directory.Exists(uploadsRoot))
                 Directory.CreateDirectory(uploadsRoot);
 
-            var fileExt = Path.GetExtension(file.FileName);
             var fileName = Guid.NewGuid().ToString("N") + fileExt;
             var filePath = Path.Combine(uploadsRoot, fileName);
 

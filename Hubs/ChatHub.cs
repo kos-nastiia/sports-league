@@ -36,6 +36,7 @@ namespace SportsLeague.Hubs
                 SenderName = senderName,
                 MessageText = message ?? string.Empty,
                 FilePath = string.IsNullOrWhiteSpace(filePath) ? null : filePath,
+                ReceiverName = null,
                 Timestamp = DateTime.Now
             };
 
@@ -47,7 +48,39 @@ namespace SportsLeague.Hubs
                 senderName,
                 message,
                 filePath,
-                chatMessage.Timestamp.ToString("g"));
+                chatMessage.Timestamp.ToString("g"),
+                (string?)null);
+        }
+
+        public async Task SendPrivateMessageToUser(string teamId, string targetUserName, string message, string filePath)
+        {
+            if (!int.TryParse(teamId, out var parsedTeamId) || string.IsNullOrWhiteSpace(targetUserName))
+            {
+                return;
+            }
+
+            var senderName = Context.User?.Identity?.Name ?? "Anonymous";
+            var receiverName = targetUserName.Trim();
+            var chatMessage = new ChatMessage
+            {
+                TeamId = parsedTeamId,
+                SenderName = senderName,
+                MessageText = message ?? string.Empty,
+                FilePath = string.IsNullOrWhiteSpace(filePath) ? null : filePath,
+                ReceiverName = receiverName,
+                Timestamp = DateTime.Now
+            };
+
+            _context.ChatMessages.Add(chatMessage);
+            await _context.SaveChangesAsync();
+
+            await Clients.Group(teamId).SendAsync(
+                "ReceiveMessage",
+                senderName,
+                message,
+                filePath,
+                chatMessage.Timestamp.ToString("g"),
+                receiverName);
         }
     }
 }
