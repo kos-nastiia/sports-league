@@ -397,3 +397,7 @@
 /Users/anastasiiakostyrka/Desktop/Навчання/Магістратура/2_семестр/web/SportsLeague/bin/Debug/net10.0/libman.json
 /Users/anastasiiakostyrka/Desktop/Навчання/Магістратура/2_семестр/web/SportsLeague/obj/Debug/net10.0/compressed/ipsvzsmkz4-{0}-v0fgjha4aq-v0fgjha4aq.gz
 /Users/anastasiiakostyrka/Desktop/Навчання/Магістратура/2_семестр/web/SportsLeague/obj/Debug/net10.0/compressed/3zw7vs3ucp-{0}-a39ckpyprj-a39ckpyprj.gz
+/Users/anastasiiakostyrka/Desktop/Навчання/Магістратура/2_семестр/web/SportsLeague/bin/Debug/net10.0/Microsoft.OpenApi.dll
+/Users/anastasiiakostyrka/Desktop/Навчання/Магістратура/2_семестр/web/SportsLeague/bin/Debug/net10.0/Swashbuckle.AspNetCore.Swagger.dll
+/Users/anastasiiakostyrka/Desktop/Навчання/Магістратура/2_семестр/web/SportsLeague/bin/Debug/net10.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+/Users/anastasiiakostyrka/Desktop/Навчання/Магістратура/2_семестр/web/SportsLeague/bin/Debug/net10.0/Swashbuckle.AspNetCore.SwaggerUI.dll

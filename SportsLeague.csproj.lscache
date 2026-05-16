@@ -57,6 +57,9 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 [sourceFiles]
 Controllers/
  AdminController.cs
+ Api/
+  PlayersApiController.cs
+  TeamsApiController.cs
  HomeController.cs
  PlayersController.cs
  TeamsController.cs
@@ -92,6 +95,9 @@ obj/Debug/net10.0/
  SportsLeague.GlobalUsings.g.cs
  SportsLeague.RazorAssemblyInfo.cs
 Program.cs
+Repositories/
+ IRepository.cs
+ Repository.cs
 
 [metadataReferences]
 <DOTNET>/packs/Microsoft.AspNetCore.App.Ref/10.0.3/ref/net10.0/
@@ -431,6 +437,7 @@ Program.cs
  microsoft.entityframeworkcore/10.0.3/lib/net10.0/Microsoft.EntityFrameworkCore.dll
  microsoft.extensions.dependencymodel/10.0.3/lib/net10.0/Microsoft.Extensions.DependencyModel.dll
  microsoft.net.stringtools/17.11.48/ref/net8.0/Microsoft.NET.StringTools.dll
+ microsoft.openapi/2.4.1/lib/net8.0/Microsoft.OpenApi.dll
  microsoft.visualstudio.solutionpersistence/1.0.52/lib/net8.0/Microsoft.VisualStudio.SolutionPersistence.dll
  microsoft.visualstudio.web.codegeneration.core/10.0.2/lib/net10.0/Microsoft.VisualStudio.Web.CodeGeneration.Core.dll
  microsoft.visualstudio.web.codegeneration.design/10.0.2/lib/net10.0/dotnet-aspnet-codegenerator-design.dll
@@ -453,6 +460,9 @@ Program.cs
  sqlitepclraw.bundle_e_sqlite3/2.1.11/lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll
  sqlitepclraw.core/2.1.11/lib/netstandard2.0/SQLitePCLRaw.core.dll
  sqlitepclraw.provider.e_sqlite3/2.1.11/lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll
+ swashbuckle.aspnetcore.swagger/10.1.7/lib/net10.0/Swashbuckle.AspNetCore.Swagger.dll
+ swashbuckle.aspnetcore.swaggergen/10.1.7/lib/net10.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+ swashbuckle.aspnetcore.swaggerui/10.1.7/lib/net10.0/Swashbuckle.AspNetCore.SwaggerUI.dll
  system.codedom/6.0.0/lib/net6.0/System.CodeDom.dll
  system.composition.attributedmodel/9.0.0/lib/net9.0/System.Composition.AttributedModel.dll
  system.composition.convention/9.0.0/lib/net9.0/System.Composition.Convention.dll
