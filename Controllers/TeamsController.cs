@@ -1,7 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SportsLeague.Data;
-using SportsLeague.Models; 
+using SportsLeague.Models;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace SportsLeague.Controllers
 {
@@ -35,10 +40,19 @@ namespace SportsLeague.Controllers
                 .FirstOrDefaultAsync(t => t.Id == id);
             if (team == null) return NotFound();
 
+            // Load chat history for this team
+            var chatHistory = await _context.ChatMessages
+                .Where(m => m.TeamId == id)
+                .OrderBy(m => m.Timestamp)
+                .ToListAsync();
+
+            ViewBag.ChatHistory = chatHistory;
+
             return View(team);
         }
 
         // GET: Teams/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -47,6 +61,7 @@ namespace SportsLeague.Controllers
         // POST: Teams/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,Name,City,FoundedDate,CoachName,Stadium")] Team team)
         {
             if (ModelState.IsValid)
@@ -59,6 +74,7 @@ namespace SportsLeague.Controllers
         }
 
         // GET: Teams/Edit
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -72,6 +88,7 @@ namespace SportsLeague.Controllers
         // POST: Teams/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,City,FoundedDate,CoachName,Stadium")] Team team)
         {
             if (id != team.Id) return NotFound();
@@ -96,6 +113,7 @@ namespace SportsLeague.Controllers
         }
 
         // GET: Teams/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -109,12 +127,38 @@ namespace SportsLeague.Controllers
         // POST: Teams/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var team = await _context.Teams.FindAsync(id);
             _context.Teams.Remove(team);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Teams/UploadChatFile
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> UploadChatFile(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest(new { error = "No file uploaded." });
+
+            var uploadsRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            if (!Directory.Exists(uploadsRoot))
+                Directory.CreateDirectory(uploadsRoot);
+
+            var fileExt = Path.GetExtension(file.FileName);
+            var fileName = Guid.NewGuid().ToString("N") + fileExt;
+            var filePath = Path.Combine(uploadsRoot, fileName);
+
+            using (var stream = System.IO.File.Create(filePath))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var relativePath = "/uploads/" + fileName;
+            return Json(new { filePath = relativePath });
         }
     }
 }

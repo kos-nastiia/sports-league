@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "v3laSjaoYSA=",
+  "dgSpecHash": "4ksBDDhJUIU=",
   "success": true,
   "projectFilePath": "/Users/anastasiiakostyrka/Desktop/Навчання/Магістратура/2_семестр/web/SportsLeague/SportsLeague.csproj",
   "expectedPackageFiles": [
@@ -54,6 +54,8 @@
     "/Users/anastasiiakostyrka/.nuget/packages/humanizer.core.zh-cn/2.14.1/humanizer.core.zh-cn.2.14.1.nupkg.sha512",
     "/Users/anastasiiakostyrka/.nuget/packages/humanizer.core.zh-hans/2.14.1/humanizer.core.zh-hans.2.14.1.nupkg.sha512",
     "/Users/anastasiiakostyrka/.nuget/packages/humanizer.core.zh-hant/2.14.1/humanizer.core.zh-hant.2.14.1.nupkg.sha512",
+    "/Users/anastasiiakostyrka/.nuget/packages/microsoft.aspnetcore.identity.entityframeworkcore/10.0.0/microsoft.aspnetcore.identity.entityframeworkcore.10.0.0.nupkg.sha512",
+    "/Users/anastasiiakostyrka/.nuget/packages/microsoft.aspnetcore.identity.ui/10.0.0/microsoft.aspnetcore.identity.ui.10.0.0.nupkg.sha512",
     "/Users/anastasiiakostyrka/.nuget/packages/microsoft.aspnetcore.razor.language/6.0.24/microsoft.aspnetcore.razor.language.6.0.24.nupkg.sha512",
     "/Users/anastasiiakostyrka/.nuget/packages/microsoft.build/17.11.48/microsoft.build.17.11.48.nupkg.sha512",
     "/Users/anastasiiakostyrka/.nuget/packages/microsoft.build.framework/18.0.2/microsoft.build.framework.18.0.2.nupkg.sha512",
@@ -80,6 +82,7 @@
     "/Users/anastasiiakostyrka/.nuget/packages/microsoft.entityframeworkcore.sqlite.core/10.0.3/microsoft.entityframeworkcore.sqlite.core.10.0.3.nupkg.sha512",
     "/Users/anastasiiakostyrka/.nuget/packages/microsoft.entityframeworkcore.tools/10.0.3/microsoft.entityframeworkcore.tools.10.0.3.nupkg.sha512",
     "/Users/anastasiiakostyrka/.nuget/packages/microsoft.extensions.dependencymodel/10.0.3/microsoft.extensions.dependencymodel.10.0.3.nupkg.sha512",
+    "/Users/anastasiiakostyrka/.nuget/packages/microsoft.extensions.fileproviders.embedded/10.0.0/microsoft.extensions.fileproviders.embedded.10.0.0.nupkg.sha512",
     "/Users/anastasiiakostyrka/.nuget/packages/microsoft.net.stringtools/17.11.48/microsoft.net.stringtools.17.11.48.nupkg.sha512",
     "/Users/anastasiiakostyrka/.nuget/packages/microsoft.visualstudio.solutionpersistence/1.0.52/microsoft.visualstudio.solutionpersistence.1.0.52.nupkg.sha512",
     "/Users/anastasiiakostyrka/.nuget/packages/microsoft.visualstudio.web.codegeneration/10.0.2/microsoft.visualstudio.web.codegeneration.10.0.2.nupkg.sha512",
@@ -117,5 +120,30 @@
     "/Users/anastasiiakostyrka/.nuget/packages/system.security.cryptography.pkcs/6.0.4/system.security.cryptography.pkcs.6.0.4.nupkg.sha512",
     "/Users/anastasiiakostyrka/.nuget/packages/system.security.cryptography.protecteddata/9.0.6/system.security.cryptography.protecteddata.9.0.6.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1901",
+      "level": "Warning",
+      "message": "Package 'NuGet.Packaging' 6.12.1 has a known low severity vulnerability, https://github.com/advisories/GHSA-g4vj-cjjj-v7hg",
+      "projectPath": "/Users/anastasiiakostyrka/Desktop/Навчання/Магістратура/2_семестр/web/SportsLeague/SportsLeague.csproj",
+      "warningLevel": 1,
+      "filePath": "/Users/anastasiiakostyrka/Desktop/Навчання/Магістратура/2_семестр/web/SportsLeague/SportsLeague.csproj",
+      "libraryId": "NuGet.Packaging",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1901",
+      "level": "Warning",
+      "message": "Package 'NuGet.Protocol' 6.12.1 has a known low severity vulnerability, https://github.com/advisories/GHSA-g4vj-cjjj-v7hg",
+      "projectPath": "/Users/anastasiiakostyrka/Desktop/Навчання/Магістратура/2_семестр/web/SportsLeague/SportsLeague.csproj",
+      "warningLevel": 1,
+      "filePath": "/Users/anastasiiakostyrka/Desktop/Навчання/Магістратура/2_семестр/web/SportsLeague/SportsLeague.csproj",
+      "libraryId": "NuGet.Protocol",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
 }

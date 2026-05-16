@@ -11,21 +11,21 @@ namespace SportsLeague.Models
 
         [Required]
         [StringLength(100)]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [Required]
         [StringLength(100)]
-        public string City { get; set; }
+        public required string City { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayName("Founded Date")]
         public DateTime? FoundedDate { get; set; }
 
         [StringLength(100)]
-        public string CoachName { get; set; }
+        public string? CoachName { get; set; }
 
         [StringLength(100)]
-        public string Stadium { get; set; }
+        public string? Stadium { get; set; }
 
         public ICollection<TeamPlayer> TeamPlayers { get; set; } = new List<TeamPlayer>();
     }

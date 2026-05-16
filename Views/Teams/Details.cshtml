@@ -43,3 +43,123 @@
     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a> |
     <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </p>
+
+<hr />
+<h3>Team Chat</h3>
+<div class="card mb-3">
+    <div class="card-body">
+        <div id="chatWindow" style="max-height: 400px; overflow-y: auto;">
+            @{ var history = ViewBag.ChatHistory as List<SportsLeague.Models.ChatMessage> ?? new List<SportsLeague.Models.ChatMessage>(); }
+            @foreach (var msg in history)
+            {
+                <div class="mb-2">
+                    <strong>@msg.SenderName</strong>
+                    <small class="text-muted">@msg.Timestamp.ToString("g")</small>
+                    <div>@msg.MessageText</div>
+                    @if (!string.IsNullOrEmpty(msg.FilePath))
+                    {
+                        <div class="mt-1">
+                            <a href="@msg.FilePath" target="_blank">
+                                <img src="@msg.FilePath" alt="attachment" style="max-width:200px; max-height:200px;" />
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="mt-3">
+            <div class="input-group">
+                <input id="messageInput" type="text" class="form-control" placeholder="Type a message..." />
+                <input id="fileInput" type="file" class="form-control" style="max-width:200px;" />
+                <button id="sendBtn" class="btn btn-primary">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
+    <script>
+        (function () {
+            const teamId = '@Model.Id';
+            const chatWindow = document.getElementById('chatWindow');
+            const messageInput = document.getElementById('messageInput');
+            const fileInput = document.getElementById('fileInput');
+            const sendBtn = document.getElementById('sendBtn');
+
+            function appendMessage(sender, text, filePath, timestamp) {
+                const div = document.createElement('div');
+                div.className = 'mb-2';
+                const strong = document.createElement('strong');
+                strong.textContent = sender;
+                const small = document.createElement('small');
+                small.className = 'text-muted ms-2';
+                small.textContent = ' ' + timestamp;
+                const msgDiv = document.createElement('div');
+                msgDiv.textContent = text;
+                div.appendChild(strong);
+                div.appendChild(small);
+                div.appendChild(msgDiv);
+                if (filePath) {
+                    const wrap = document.createElement('div');
+                    wrap.className = 'mt-1';
+                    const a = document.createElement('a');
+                    a.href = filePath;
+                    a.target = '_blank';
+                    const img = document.createElement('img');
+                    img.src = filePath;
+                    img.style.maxWidth = '200px';
+                    img.style.maxHeight = '200px';
+                    a.appendChild(img);
+                    wrap.appendChild(a);
+                    div.appendChild(wrap);
+                }
+                chatWindow.appendChild(div);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
+
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl('/chatHub')
+                .withAutomaticReconnect()
+                .build();
+
+            connection.start().then(function () {
+                connection.invoke('JoinTeamChat', teamId).catch(console.error);
+            }).catch(function (err) {
+                console.error(err.toString());
+            });
+
+            connection.on('ReceiveMessage', function (sender, message, filePath, timestamp) {
+                appendMessage(sender, message, filePath, timestamp);
+            });
+
+            sendBtn.addEventListener('click', async function () {
+                const text = messageInput.value || '';
+                let uploadedPath = '';
+                if (fileInput.files && fileInput.files.length > 0) {
+                    const fd = new FormData();
+                    fd.append('file', fileInput.files[0]);
+                    try {
+                        const resp = await fetch('/Teams/UploadChatFile', { method: 'POST', body: fd });
+                        if (!resp.ok) throw new Error('Upload failed');
+                        const data = await resp.json();
+                        uploadedPath = data.filePath || '';
+                    } catch (e) {
+                        console.error(e);
+                        alert('File upload failed.');
+                        return;
+                    }
+                }
+
+                try {
+                    await connection.invoke('SendMessageToTeam', teamId.toString(), text, uploadedPath);
+                    messageInput.value = '';
+                    fileInput.value = '';
+                } catch (err) {
+                    console.error(err.toString());
+                }
+            });
+        })();
+    </script>
+}

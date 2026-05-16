@@ -9,10 +9,10 @@ namespace SportsLeague.Models
         public int Id { get; set; }
 
         public int TeamId { get; set; }
-        public Team Team { get; set; }
+        public Team? Team { get; set; }
 
         public int PlayerId { get; set; }
-        public Player Player { get; set; }
+        public Player? Player { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
@@ -24,6 +24,6 @@ namespace SportsLeague.Models
 
         [Required]
         [StringLength(50)]
-        public string ContractType { get; set; }
+        public required string ContractType { get; set; }
     }
 }

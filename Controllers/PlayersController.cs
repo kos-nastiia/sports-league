@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SportsLeague.Data;
@@ -41,6 +42,7 @@ namespace SportsLeague.Controllers
         }
 
         // GET: Players/Create
+        [Authorize]
         public IActionResult Create()
         {
             ViewBag.Teams = _context.Teams.ToList();
@@ -50,6 +52,7 @@ namespace SportsLeague.Controllers
         // POST: Players/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create(
     [Bind("Id,FirstName,LastName,BirthDate,Position,Number")] Player player,
     int? teamId)
@@ -81,6 +84,7 @@ namespace SportsLeague.Controllers
         }
 
         // GET: Players/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -99,6 +103,7 @@ namespace SportsLeague.Controllers
         // POST: Players/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,BirthDate,Position,Number")] Player player, int? teamId)
         {
             if (id != player.Id) return NotFound();
@@ -167,6 +172,36 @@ namespace SportsLeague.Controllers
 
             ViewBag.Teams = _context.Teams.ToList();
             return View(player);
+        }
+
+        // GET: Players/Delete/5
+        [Authorize]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var player = await _context.Players
+                .Include(p => p.TeamPlayers)
+                .ThenInclude(tp => tp.Team)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (player == null) return NotFound();
+
+            return View(player);
+        }
+
+        // POST: Players/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var player = await _context.Players.FindAsync(id);
+            if (player == null) return NotFound();
+
+            _context.Players.Remove(player);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

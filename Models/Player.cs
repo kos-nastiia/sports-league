@@ -11,11 +11,11 @@ namespace SportsLeague.Models
 
         [Required]
         [StringLength(50)]
-        public string FirstName { get; set; }
+        public required string FirstName { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string LastName { get; set; }
+        public required string LastName { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayName("Birth Date")]
@@ -23,7 +23,7 @@ namespace SportsLeague.Models
 
         [Required]
         [StringLength(50)]
-        public string Position { get; set; }
+        public required string Position { get; set; }
 
         [Range(0, 99)]
         public int Number { get; set; }
